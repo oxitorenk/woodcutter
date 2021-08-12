@@ -16,8 +16,6 @@ public class BodyHandler : MonoBehaviour
 
     private void Start()
     {
-        BranchChance = 20;
-        
         _treeLogs = new List<GameObject>();
 
         for (var logCount = 0; logCount < treeLogCount; logCount++)
