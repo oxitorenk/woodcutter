@@ -1,20 +1,31 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
-public class BodyHandler : MonoBehaviour
+public class TreeLogHandler : MonoBehaviour
 {
     [SerializeField] private Transform truckTransform;
-    [SerializeField] private GameObject treeLogPrefab;
-    [SerializeField] private GameObject leftBranchPrefab;
-    [SerializeField] private GameObject rightBranchPrefab;
-
     [SerializeField] private int treeLogCount;
-
+    
+    private PlayerHandler _playerHandler;
+    private LogSpawner _logSpawner;
+    
     private List<GameObject> _treeLogs;
 
-    public int BranchChance { get; set; }
-
     private void Start()
+    {
+        GameEvents.OnCutTheLog += CutTheLog;
+
+        _playerHandler = gameObject.GetComponent<PlayerHandler>();
+        _logSpawner = gameObject.GetComponent<LogSpawner>();
+        
+        InitializeFirstTime();
+        
+    }
+
+    private void InitializeFirstTime()
     {
         _treeLogs = new List<GameObject>();
 
@@ -24,19 +35,11 @@ public class BodyHandler : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        if (_treeLogs != null && Input.GetKeyDown(KeyCode.Mouse0))
-        {
-            CutTheLog();
-        }
-    }
-
     private void SpawnNewLog()
     {
-        _treeLogs.Add(Instantiate(PickRandomLog()));
+        _treeLogs.Add(Instantiate(_logSpawner.GetRandomLog()));
+        
         var spawnedLog = _treeLogs[_treeLogs.Count - 1];
-
         spawnedLog.transform.position = SetSpawnPosition(spawnedLog);
     }
 
@@ -57,7 +60,12 @@ public class BodyHandler : MonoBehaviour
 
     private void CutTheLog()
     {
+        if (_treeLogs == null) return;
+        
         var bottomLog = _treeLogs[0];
+        
+        CheckIsPlayerCollide(bottomLog);
+        
         var bottomLogPosition = bottomLog.transform.position;
 
         _treeLogs.Remove(bottomLog);
@@ -65,6 +73,19 @@ public class BodyHandler : MonoBehaviour
         
         ShiftRemainingLogs(bottomLogPosition);
         SpawnNewLog();
+    }
+
+    private void CheckIsPlayerCollide(GameObject bottomLog)
+    {
+        switch (_playerHandler.PlayerPosition)
+        {
+            case PlayerHandler.Position.Left when !bottomLog.CompareTag("Left"):
+            case PlayerHandler.Position.Right when !bottomLog.CompareTag("Right"):
+                return;
+            default:
+                GameEvents.GameOverMethod();
+                break;
+        }
     }
 
     private void ShiftRemainingLogs(Vector3 firstPosition)
@@ -78,15 +99,5 @@ public class BodyHandler : MonoBehaviour
             nextLogPosition = currentLog.transform.position;
             currentLog.transform.position = positionForCurrentLog;
         }
-    }
-
-    private GameObject PickRandomLog()
-    {
-        var randomLogNumber = Random.Range(0, 100);
-
-        if (randomLogNumber <= BranchChance)
-            return Random.Range(0, 2) == 0 ? leftBranchPrefab : rightBranchPrefab;
-
-        return treeLogPrefab;
     }
 }
