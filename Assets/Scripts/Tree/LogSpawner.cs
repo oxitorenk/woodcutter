@@ -1,6 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class LogSpawner : MonoBehaviour
 {
@@ -14,6 +14,12 @@ public class LogSpawner : MonoBehaviour
     {
         GameEvents.OnIncreaseDifficulty += IncreaseBranchChance;
         GameEvents.OnDecreaseDifficulty += DecreaseBranchChange;
+    }
+
+    private void OnDestroy()
+    {
+        GameEvents.OnIncreaseDifficulty -= IncreaseBranchChance;
+        GameEvents.OnDecreaseDifficulty -= DecreaseBranchChange;
     }
 
     public GameObject GetRandomLog()

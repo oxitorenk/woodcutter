@@ -16,13 +16,17 @@ public class TreeLogHandler : MonoBehaviour
 
     private void Start()
     {
-        GameEvents.OnCutTheLog += CutTheLog;
-
         _playerHandler = gameObject.GetComponent<PlayerHandler>();
         _logSpawner = gameObject.GetComponent<LogSpawner>();
         
+        GameEvents.OnCutTheLog += CutTheLog;
+
         InitializeFirstTime();
-        
+    }
+
+    private void OnDestroy()
+    {
+        GameEvents.OnCutTheLog -= CutTheLog;
     }
 
     private void InitializeFirstTime()

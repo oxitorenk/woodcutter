@@ -10,17 +10,23 @@ public class ScoreHandler : MonoBehaviour
 
     private void Start()
     {
-        _dataPath = Application.persistentDataPath + "ScoreData.json";
-        
         GameEvents.OnCutTheLog += IncreaseScore;
         GameEvents.OnGameOver += SaveScore;
+        
+        _dataPath = Application.persistentDataPath + "ScoreData.json";
 
         if (!File.Exists(_dataPath))
         {
             InitializeFirstTime();
         }
     }
-    
+
+    private void OnDestroy()
+    {
+        GameEvents.OnCutTheLog -= IncreaseScore;
+        GameEvents.OnGameOver -= SaveScore;
+    }
+
     private void IncreaseScore()
     {
         CurrentScore++;

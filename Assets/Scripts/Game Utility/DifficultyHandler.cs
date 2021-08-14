@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DifficultyHandler : MonoBehaviour
@@ -9,38 +7,37 @@ public class DifficultyHandler : MonoBehaviour
     private const float ProgressValue = 5f;
 
     private float _threshold = 0.5f;
-    private float _progressBar;
+    public float ProgressBar { get; private set; }
     private float _passedTime;
     private int _difficulty;
-    private int _level;
-    
+    public int Level { get; private set; }
+
     private void Start()
     {
-        _progressBar = 50;
+        GameEvents.OnCutTheLog += MakeProgress;
+        
+        ProgressBar = 50;
         IncreaseDifficulty();
+    }
+
+    private void OnDestroy()
+    {
+        GameEvents.OnCutTheLog -= MakeProgress;
     }
 
     private void Update()
     {
-        _passedTime += Time.deltaTime;
-
-        if (_passedTime >= _threshold)
-        {
-            _progressBar -= ProgressValue;
-            _passedTime -= _threshold;
-        }
-
         CheckProgress();
     }
 
-    public void MakeProgress()
+    private void MakeProgress()
     {
-        _progressBar += IncreaseValue;
+        ProgressBar += IncreaseValue;
     }
 
     private void IncreaseDifficulty()
     {
-        _level++;
+        Level++;
         _difficulty += IncreaseValue;
         
         GameEvents.IncreaseDifficultyMethod(IncreaseValue);
@@ -48,9 +45,9 @@ public class DifficultyHandler : MonoBehaviour
 
     private void DecreaseDifficulty()
     {
-        _level--;
+        Level--;
 
-        if (_level < 1)
+        if (Level < 1)
         {
             GameEvents.GameOverMethod();
         }
@@ -62,15 +59,23 @@ public class DifficultyHandler : MonoBehaviour
 
     private void CheckProgress()
     {
-        if (_progressBar >= 100)
+        _passedTime += Time.deltaTime;
+
+        if (_passedTime >= _threshold)
+        {
+            ProgressBar -= ProgressValue;
+            _passedTime -= _threshold;
+        }
+        
+        if (ProgressBar >= 100)
         {
             IncreaseDifficulty();
-            _progressBar = 10;
+            ProgressBar = 10;
         }
-        else if (_progressBar <= 0)
+        else if (ProgressBar <= 0)
         {
             DecreaseDifficulty();
-            _progressBar = 50;
+            ProgressBar = 50;
         }
     }
 }

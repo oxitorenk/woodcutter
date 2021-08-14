@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerHandler : MonoBehaviour
@@ -17,6 +18,11 @@ public class PlayerHandler : MonoBehaviour
         GameEvents.OnCutTheLog += PlayCutAnimation;
 
         PlayerPosition = Position.Right;
+    }
+
+    private void OnDestroy()
+    {
+        GameEvents.OnCutTheLog -= PlayCutAnimation;
     }
 
     public void MoveToRight()
