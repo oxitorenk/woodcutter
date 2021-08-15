@@ -47,7 +47,7 @@ public class UIHandler : MonoBehaviour
         scoreText.text = score;
     }
 
-    private void UpdateLevelText(int increaseValue)
+    private void UpdateLevelText()
     {
         var level = _difficultyHandler.Level.ToString();
         levelText.text = "level " + level;

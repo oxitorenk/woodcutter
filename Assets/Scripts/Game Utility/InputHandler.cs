@@ -14,6 +14,7 @@ public class InputHandler : MonoBehaviour
         GameEvents.OnGameOver += OnGameOver;
         
         _playerHandler = gameObject.GetComponent<PlayerHandler>();
+        
         _isGameOver = false;
     }
 
