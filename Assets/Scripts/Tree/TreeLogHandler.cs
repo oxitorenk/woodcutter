@@ -14,12 +14,18 @@ public class TreeLogHandler : MonoBehaviour
     
     private List<GameObject> _treeLogs;
 
+    private string _leftBranchTag;
+    private string _rightBranchTag;
+
     private void Start()
     {
         _playerHandler = gameObject.GetComponent<PlayerHandler>();
         _logSpawner = gameObject.GetComponent<LogSpawner>();
         
         GameEvents.OnCutTheLog += CutTheLog;
+        
+        _leftBranchTag = _logSpawner.LeftBranchTag;
+        _rightBranchTag = _logSpawner.RightBranchTag;
 
         InitializeFirstTime();
     }
@@ -41,8 +47,16 @@ public class TreeLogHandler : MonoBehaviour
 
     private void SpawnNewLog()
     {
-        _treeLogs.Add(Instantiate(_logSpawner.GetRandomLog()));
-        
+        if (_treeLogs.Count < 3)
+        {
+            _treeLogs.Add(Instantiate(_logSpawner.GetNormalLog()));
+        }
+        else
+        {
+            var previousLogTag = _treeLogs[_treeLogs.Count - 1].tag;
+            _treeLogs.Add(Instantiate(_logSpawner.GetRandomLog(previousLogTag)));
+        }
+
         var spawnedLog = _treeLogs[_treeLogs.Count - 1];
         spawnedLog.transform.position = SetSpawnPosition(spawnedLog);
     }
@@ -67,24 +81,24 @@ public class TreeLogHandler : MonoBehaviour
         if (_treeLogs == null) return;
         
         var bottomLog = _treeLogs[0];
+        var bottomLogPosition = bottomLog.transform.position;
         
         CheckIsPlayerCollide(bottomLog);
-        
-        var bottomLogPosition = bottomLog.transform.position;
 
         _treeLogs.Remove(bottomLog);
         Destroy(bottomLog);
         
         ShiftRemainingLogs(bottomLogPosition);
         SpawnNewLog();
+        
     }
 
     private void CheckIsPlayerCollide(GameObject bottomLog)
     {
         switch (_playerHandler.PlayerPosition)
         {
-            case PlayerHandler.Position.Left when !bottomLog.CompareTag("Left"):
-            case PlayerHandler.Position.Right when !bottomLog.CompareTag("Right"):
+            case PlayerHandler.Position.Left when !bottomLog.CompareTag(_leftBranchTag):
+            case PlayerHandler.Position.Right when !bottomLog.CompareTag(_rightBranchTag):
                 return;
             default:
                 GameEvents.GameOverMethod();
