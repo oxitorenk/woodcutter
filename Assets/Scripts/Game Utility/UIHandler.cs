@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Slider = UnityEngine.UI.Slider;
 using DG.Tweening;
+using UnityEngine.UI;
 
 public class UIHandler : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class UIHandler : MonoBehaviour
     [SerializeField] private TMP_Text highScoreText;
     [SerializeField] private TMP_Text levelText;
     [SerializeField] private Slider progressSlider;
+    [SerializeField] private Image fillImage;
 
     private ScoreHandler _scoreHandler;
     private DifficultyHandler _difficultyHandler;
@@ -24,12 +26,15 @@ public class UIHandler : MonoBehaviour
     private Vector3 _levelTextOriginalPos;
     private Vector3 _levelTextShowUpPos;
 
+    private bool _isGameStarted;
+
     private void Start()
     {
+        GameEvents.OnStartGame += StartGame;
         GameEvents.OnCutTheLog += UpdateScoreText;
-        GameEvents.OnGameOver += GameOver;
         GameEvents.OnIncreaseDifficulty += UpdateLevelText;
         GameEvents.OnDecreaseDifficulty += UpdateLevelText;
+        GameEvents.OnGameOver += GameOver;
         
         _scoreHandler = gameObject.GetComponent<ScoreHandler>();
         _difficultyHandler = gameObject.GetComponent<DifficultyHandler>();
@@ -42,15 +47,22 @@ public class UIHandler : MonoBehaviour
 
     private void OnDestroy()
     {
+        GameEvents.OnStartGame -= StartGame;
         GameEvents.OnCutTheLog -= UpdateScoreText;
-        GameEvents.OnGameOver -= GameOver;
         GameEvents.OnIncreaseDifficulty -= UpdateLevelText;
         GameEvents.OnDecreaseDifficulty -= UpdateLevelText;
+        GameEvents.OnGameOver -= GameOver;
     }
 
     private void Update()
     {
         progressSlider.value = _difficultyHandler.ProgressBar;
+    }
+
+    private void StartGame()
+    {
+        _isGameStarted = true;
+        UpdateLevelText();
     }
 
     private void UpdateScoreText()
@@ -61,16 +73,18 @@ public class UIHandler : MonoBehaviour
 
     private void UpdateLevelText()
     {
+        if (!_isGameStarted) return;
+        
         var level = _difficultyHandler.Level.ToString();
         levelText.text = "level " + level;
-
+        
         StartCoroutine(PlayLevelUpAnimation());
-
     }
 
     private IEnumerator PlayLevelUpAnimation()
     {
-
+        fillImage.DOColor(Color.white, 0.5f).SetEase(Ease.InFlash, 10, 0);
+        
         levelText.rectTransform.DOMove(_levelTextShowUpPos, MoveDuration);
         levelText.DOFade(1, FadeDuration);
         yield return new WaitForSeconds(FadeDuration);

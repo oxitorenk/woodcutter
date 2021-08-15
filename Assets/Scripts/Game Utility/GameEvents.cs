@@ -1,5 +1,13 @@
 public static class GameEvents
 {
+    public delegate void StartGame();
+    public static event StartGame OnStartGame;
+    
+    public static void StartGameMethod()
+    {
+        OnStartGame?.Invoke();
+    }
+    
     public delegate void IncreaseDifficulty();
     public static event IncreaseDifficulty OnIncreaseDifficulty;
     
