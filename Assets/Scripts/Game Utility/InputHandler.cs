@@ -1,53 +1,57 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class InputHandler : MonoBehaviour
+namespace Game_Utility
 {
-    private PlayerHandler _playerHandler;
-
-    private bool _isGameOver;
-
-    private void Start()
+    public class InputHandler : MonoBehaviour
     {
-        GameEvents.OnGameOver += OnGameOver;
-        
-        _playerHandler = gameObject.GetComponent<PlayerHandler>();
-        
-        _isGameOver = false;
-    }
-
-    private void OnDestroy()
-    {
-        GameEvents.OnGameOver -= OnGameOver;
-    }
-
-    private void Update()
-    {
-        if (Input.GetButtonDown("Fire1") && !_isGameOver)
+        private PlayerHandler _playerHandler;
+        private bool _isGameStarted;
+        private bool _isGameOver;
+        private void Start()
         {
-            LeftMouseAction();
+            GameEvents.OnGameOver += OnGameOver;
+        
+            _playerHandler = gameObject.GetComponent<PlayerHandler>();
+        
+            _isGameOver = false;
         }
-    }
-
-    private void LeftMouseAction()
-    {
-        GameEvents.CutTheLogMethod();
+        
+        private void OnDestroy()
+        {
+            GameEvents.OnGameOver -= OnGameOver;
+        }
+        private void Update()
+        {
+            if (Input.GetButtonDown("Fire1") && !_isGameStarted && !EventSystem.current.IsPointerOverGameObject())
+            {
+                _isGameStarted = true;
+                GameEvents.StartGameMethod();
+            }
+            if (Input.GetButtonDown("Fire1") && !_isGameOver && _isGameStarted)
+            {
+                LeftMouseAction();
+            }
+        }
+        
+        private void OnGameOver()
+        {
+            _isGameOver = true;
+        }
+    
+        private void LeftMouseAction()
+        {
+            GameEvents.CutTheLogMethod();
             
-        var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        if (mousePos.x < 0)
-        {
-            _playerHandler.MoveToLeft();
+            var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            if (mousePos.x < 0)
+            {
+                _playerHandler.MoveToLeft();
+            }
+            else
+            {
+                _playerHandler.MoveToRight();
+            }
         }
-        else
-        {
-            _playerHandler.MoveToRight();
-        }
-    }
-
-    private void OnGameOver()
-    {
-        _isGameOver = true;
     }
 }
