@@ -1,19 +1,19 @@
 public static class GameEvents
 {
-    public delegate void IncreaseDifficulty(int increaseValue);
+    public delegate void IncreaseDifficulty();
     public static event IncreaseDifficulty OnIncreaseDifficulty;
     
-    public static void IncreaseDifficultyMethod(int increaseValue)
+    public static void IncreaseDifficultyMethod()
     {
-        OnIncreaseDifficulty?.Invoke(increaseValue);
+        OnIncreaseDifficulty?.Invoke();
     }
 
-    public delegate void DecreaseDifficulty(int decreaseValue);
+    public delegate void DecreaseDifficulty();
     public static event DecreaseDifficulty OnDecreaseDifficulty;
 
-    public static void DecreaseDifficultyMethod(int decreaseValue)
+    public static void DecreaseDifficultyMethod()
     {
-        OnDecreaseDifficulty?.Invoke(decreaseValue);
+        OnDecreaseDifficulty?.Invoke();
     }
 
     public delegate void CutTheLog();
