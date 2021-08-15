@@ -7,12 +7,15 @@ public class DifficultyHandler : MonoBehaviour
     public float ProgressBar { get; private set; }
     
     private const int ProgressValue = 2;
-    private const float Threshold = 0.35f;
+    private const float IncreaseValue = 0.015f;
+    private float _threshold = 0.37f;
     private float _passedTime;
+    private bool _isGameStarted;
     
     private void Start()
     {
         GameEvents.OnCutTheLog += MakeProgress;
+        GameEvents.OnStartGame += StartGame;
         
         ProgressBar = 50;
         IncreaseDifficulty();
@@ -21,6 +24,7 @@ public class DifficultyHandler : MonoBehaviour
     private void OnDestroy()
     {
         GameEvents.OnCutTheLog -= MakeProgress;
+        GameEvents.OnStartGame -= StartGame;
     }
 
     private void Update()
@@ -28,14 +32,23 @@ public class DifficultyHandler : MonoBehaviour
         CheckProgress();
     }
 
+    private void StartGame()
+    {
+        _isGameStarted = true;
+    }
+
     private void MakeProgress()
     {
+        if (!_isGameStarted)
+            GameEvents.StartGameMethod();
+        
         ProgressBar += ProgressValue;
     }
 
     private void IncreaseDifficulty()
     {
         Level++;
+        _threshold -= IncreaseValue;
 
         GameEvents.IncreaseDifficultyMethod();
     }
@@ -43,6 +56,7 @@ public class DifficultyHandler : MonoBehaviour
     private void DecreaseDifficulty()
     {
         Level--;
+        _threshold += IncreaseValue;
 
         if (Level < 1)
         {
@@ -54,12 +68,13 @@ public class DifficultyHandler : MonoBehaviour
 
     private void CheckProgress()
     {
-        _passedTime += Time.deltaTime;
+        if (_isGameStarted) 
+            _passedTime += Time.deltaTime;
 
-        if (_passedTime >= Threshold)
+        if (_passedTime >= _threshold)
         {
             ProgressBar -= ProgressValue;
-            _passedTime -= Threshold;
+            _passedTime -= _threshold;
         }
         
         if (ProgressBar >= 100)
