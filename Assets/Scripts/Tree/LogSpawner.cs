@@ -8,12 +8,23 @@ public class LogSpawner : MonoBehaviour
     [SerializeField] private GameObject leftBranchLogPrefab;
     [SerializeField] private GameObject rightBranchLogPrefab;
 
-    private int _branchChance = 20;
+    public string LeftBranchTag { get; private set; }
+    public string RightBranchTag { get; private set; }
+    
+    private const int MaxBranchChance = 80;
+    private const int MinBranchChance = 40;
+    private const int BranchChanceIncreaseValue = 5;
+    private int _branchChance;
 
     private void Start()
     {
         GameEvents.OnIncreaseDifficulty += IncreaseBranchChance;
         GameEvents.OnDecreaseDifficulty += DecreaseBranchChange;
+
+        LeftBranchTag = leftBranchLogPrefab.tag;
+        RightBranchTag = rightBranchLogPrefab.tag;
+
+        _branchChance = MinBranchChance;
     }
 
     private void OnDestroy()
@@ -22,24 +33,38 @@ public class LogSpawner : MonoBehaviour
         GameEvents.OnDecreaseDifficulty -= DecreaseBranchChange;
     }
 
-    public GameObject GetRandomLog()
+    public GameObject GetNormalLog()
+    {
+        return normalLogPrefab;
+    }
+    public GameObject GetRandomLog(string logTag)
     {
         var randomValue = Random.Range(1, 101);
 
         if (randomValue <= _branchChance)
-            return Random.Range(0, 2) == 0 ? leftBranchLogPrefab : rightBranchLogPrefab;
+        {
+            var randomBranch = Random.Range(0, 2);
+            
+            return logTag switch
+            {
+                "Left" => randomBranch == 0 ? leftBranchLogPrefab : normalLogPrefab,
+                "Right" => randomBranch == 0 ? rightBranchLogPrefab : normalLogPrefab,
+                _ => randomBranch == 0 ? leftBranchLogPrefab : rightBranchLogPrefab
+            };
+        }
 
         return normalLogPrefab;
     }
-
-
-    private void IncreaseBranchChance(int increaseValue)
+    
+    private void IncreaseBranchChance()
     {
-        _branchChance += increaseValue;
+        if (_branchChance < MaxBranchChance) 
+            _branchChance += BranchChanceIncreaseValue;
     }
 
-    private void DecreaseBranchChange(int decreaseValue)
+    private void DecreaseBranchChange()
     {
-        _branchChance -= decreaseValue;
+        if (_branchChance > MinBranchChance)
+            _branchChance -= BranchChanceIncreaseValue;
     }
 }
