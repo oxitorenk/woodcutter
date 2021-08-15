@@ -13,7 +13,7 @@ public class LogSpawner : MonoBehaviour
     
     private const int MaxBranchChance = 80;
     private const int MinBranchChance = 40;
-    private const int BranchChanceIncreaseValue = 5;
+    private const int BranchChanceIncreaseValue = 10;
     private int _branchChance;
 
     private void Start()

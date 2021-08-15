@@ -7,7 +7,7 @@ public class DifficultyHandler : MonoBehaviour
     public float ProgressBar { get; private set; }
     
     private const int ProgressValue = 2;
-    private const float Threshold = 0.25f;
+    private const float Threshold = 0.35f;
     private float _passedTime;
     
     private void Start()
