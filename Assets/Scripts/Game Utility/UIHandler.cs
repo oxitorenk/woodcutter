@@ -1,8 +1,10 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Slider = UnityEngine.UI.Slider;
+using DG.Tweening;
 
 public class UIHandler : MonoBehaviour
 {
@@ -15,6 +17,13 @@ public class UIHandler : MonoBehaviour
     private ScoreHandler _scoreHandler;
     private DifficultyHandler _difficultyHandler;
 
+    private const float FadeDuration = 2f;
+    private const float MoveDuration = 1f;
+    private const float MoveDistance = 0.8f;
+    
+    private Vector3 _levelTextOriginalPos;
+    private Vector3 _levelTextShowUpPos;
+
     private void Start()
     {
         GameEvents.OnCutTheLog += UpdateScoreText;
@@ -24,6 +33,9 @@ public class UIHandler : MonoBehaviour
         
         _scoreHandler = gameObject.GetComponent<ScoreHandler>();
         _difficultyHandler = gameObject.GetComponent<DifficultyHandler>();
+
+        _levelTextOriginalPos = levelText.transform.position;
+        _levelTextShowUpPos = new Vector3(_levelTextOriginalPos.x, _levelTextOriginalPos.y - MoveDistance, _levelTextOriginalPos.z);
 
         scoreText.text = _scoreHandler.CurrentScore.ToString();
     }
@@ -51,6 +63,22 @@ public class UIHandler : MonoBehaviour
     {
         var level = _difficultyHandler.Level.ToString();
         levelText.text = "level " + level;
+
+        StartCoroutine(PlayLevelUpAnimation());
+
+    }
+
+    private IEnumerator PlayLevelUpAnimation()
+    {
+
+        levelText.rectTransform.DOMove(_levelTextShowUpPos, MoveDuration);
+        levelText.DOFade(1, FadeDuration);
+        yield return new WaitForSeconds(FadeDuration);
+
+        levelText.DOFade(0, FadeDuration);
+        yield return new WaitForSeconds(FadeDuration / 2);
+        
+        levelText.rectTransform.DOMove(_levelTextOriginalPos, MoveDuration);
     }
 
     private void GameOver()
