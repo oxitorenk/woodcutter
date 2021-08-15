@@ -6,10 +6,14 @@ public class ScoreHandler : MonoBehaviour
 {
     private static string _dataPath;
 
+    private DifficultyHandler _difficultyHandler;
+
     public int CurrentScore { get; private set; }
 
     private void Start()
     {
+        _difficultyHandler = gameObject.GetComponent<DifficultyHandler>();
+        
         GameEvents.OnCutTheLog += IncreaseScore;
         GameEvents.OnGameOver += SaveScore;
         
@@ -29,7 +33,7 @@ public class ScoreHandler : MonoBehaviour
 
     private void IncreaseScore()
     {
-        CurrentScore++;
+        CurrentScore += _difficultyHandler.Level;
     }
     
     private void SaveScore()
