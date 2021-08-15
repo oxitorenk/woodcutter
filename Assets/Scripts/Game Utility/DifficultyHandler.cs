@@ -3,15 +3,13 @@ using UnityEngine;
 
 public class DifficultyHandler : MonoBehaviour
 {
-    private const int IncreaseValue = 10;
-    private const float ProgressValue = 5f;
-
-    private float _threshold = 0.5f;
-    public float ProgressBar { get; private set; }
-    private float _passedTime;
-    private int _difficulty;
     public int Level { get; private set; }
-
+    public float ProgressBar { get; private set; }
+    
+    private const int ProgressValue = 2;
+    private const float Threshold = 0.25f;
+    private float _passedTime;
+    
     private void Start()
     {
         GameEvents.OnCutTheLog += MakeProgress;
@@ -32,15 +30,14 @@ public class DifficultyHandler : MonoBehaviour
 
     private void MakeProgress()
     {
-        ProgressBar += IncreaseValue;
+        ProgressBar += ProgressValue;
     }
 
     private void IncreaseDifficulty()
     {
         Level++;
-        _difficulty += IncreaseValue;
-        
-        GameEvents.IncreaseDifficultyMethod(IncreaseValue);
+
+        GameEvents.IncreaseDifficultyMethod();
     }
 
     private void DecreaseDifficulty()
@@ -51,31 +48,29 @@ public class DifficultyHandler : MonoBehaviour
         {
             GameEvents.GameOverMethod();
         }
-        
-        _difficulty -= IncreaseValue;
-        
-        GameEvents.DecreaseDifficultyMethod(IncreaseValue);
+
+        GameEvents.DecreaseDifficultyMethod();
     }
 
     private void CheckProgress()
     {
         _passedTime += Time.deltaTime;
 
-        if (_passedTime >= _threshold)
+        if (_passedTime >= Threshold)
         {
             ProgressBar -= ProgressValue;
-            _passedTime -= _threshold;
+            _passedTime -= Threshold;
         }
         
         if (ProgressBar >= 100)
         {
             IncreaseDifficulty();
-            ProgressBar = 10;
+            ProgressBar = 30;
         }
         else if (ProgressBar <= 0)
         {
             DecreaseDifficulty();
-            ProgressBar = 50;
+            ProgressBar = 70;
         }
     }
 }
