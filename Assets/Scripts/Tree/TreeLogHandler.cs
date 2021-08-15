@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using DG.Tweening;
 
 public class TreeLogHandler : MonoBehaviour
 {
@@ -13,10 +14,13 @@ public class TreeLogHandler : MonoBehaviour
     private LogSpawner _logSpawner;
     
     private List<GameObject> _treeLogs;
-
+    
+    private const float AnimationDuration = 0.7f;
+    private float _horizontalMove;
+    private float _zRotate;
     private string _leftBranchTag;
     private string _rightBranchTag;
-
+    
     private void Start()
     {
         _playerHandler = gameObject.GetComponent<PlayerHandler>();
@@ -84,12 +88,42 @@ public class TreeLogHandler : MonoBehaviour
         var bottomLogPosition = bottomLog.transform.position;
         
         CheckIsPlayerCollide(bottomLog);
-
-        _treeLogs.Remove(bottomLog);
-        Destroy(bottomLog);
         
+        _treeLogs.Remove(bottomLog);
         ShiftRemainingLogs(bottomLogPosition);
+        
         SpawnNewLog();
+
+        StartCoroutine(PlayCutAnimation(bottomLog));
+    }
+
+    private IEnumerator PlayCutAnimation(GameObject treeLog)
+    {
+        var logPosition = treeLog.transform.position;
+        var logRotation = treeLog.transform.rotation;
+
+        if (_playerHandler.PlayerPosition == PlayerHandler.Position.Left)
+        {
+            _horizontalMove = 10;
+            _zRotate = 45;
+        }
+        else
+        {
+            _horizontalMove = -10;
+            _zRotate = -45;
+        }
+
+        var move = new Vector3(logPosition.x + _horizontalMove, logPosition.y,
+            logPosition.z);
+        var rotate = new Vector3(logRotation.x, logRotation.y, logRotation.z + _zRotate);
+
+        treeLog.transform.DOJump(move, 1f, 1, AnimationDuration); 
+        treeLog.transform.DORotate(rotate, AnimationDuration);
+        Camera.main.DOShakePosition(0.1f, 0.1f);
+
+        yield return new WaitForSeconds(AnimationDuration);
+        
+        Destroy(treeLog);
         
     }
 
