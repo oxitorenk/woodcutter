@@ -1,9 +1,14 @@
-using System;
+using System.Collections;
+using Game_Utility;
 using UnityEngine;
 
 public class PlayerHandler : MonoBehaviour
 {
     [SerializeField] private GameObject playerObject;
+    [SerializeField] private Sprite normalSprite;
+    [SerializeField] private Sprite cutSprite;
+
+    private SpriteRenderer _playerSpriteRenderer;
 
     public Position PlayerPosition { get; private set; }
 
@@ -15,14 +20,28 @@ public class PlayerHandler : MonoBehaviour
     
     private void Start()
     {
-        GameEvents.OnCutTheLog += PlayCutAnimation;
+        GameEvents.OnCutTheLog += OnCutTheLog;
 
         PlayerPosition = Position.Right;
+        _playerSpriteRenderer = playerObject.GetComponent<SpriteRenderer>();
     }
 
     private void OnDestroy()
     {
-        GameEvents.OnCutTheLog -= PlayCutAnimation;
+        GameEvents.OnCutTheLog -= OnCutTheLog;
+    }
+    
+    private void OnCutTheLog()
+    {
+        StartCoroutine(SetCutSprite());
+    }
+
+    private IEnumerator SetCutSprite()
+    {
+        _playerSpriteRenderer.sprite = cutSprite;
+        yield return new WaitForSeconds(0.1f);
+        
+        _playerSpriteRenderer.sprite = normalSprite;
     }
 
     public void MoveToRight()
@@ -55,10 +74,5 @@ public class PlayerHandler : MonoBehaviour
         var rotation = playerObject.transform.rotation;
 
         playerObject.transform.rotation = new Quaternion(rotation.x, rotationY, rotation.z, rotation.w);
-    }
-
-    private void PlayCutAnimation()
-    {
-        // Play
     }
 }
