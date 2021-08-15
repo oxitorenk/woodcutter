@@ -19,7 +19,7 @@ public class UIHandler : MonoBehaviour
 
     private const float FadeDuration = 2f;
     private const float MoveDuration = 1f;
-    private const float MoveDistance = 0.8f;
+    private const float MoveDistance = 0.9f;
     
     private Vector3 _levelTextOriginalPos;
     private Vector3 _levelTextShowUpPos;
