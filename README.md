@@ -35,7 +35,7 @@
 Woodcutter is a easy to play hard to master type of game. 
 
 <p align="center">
-  <img src="https://media1.giphy.com/media/YRSGgaDiQsue80sj7l/giphy.gif?cid=790b76118ba9f02fece32d98da6a97c91fceed8ee9b11423&rid=giphy.gif&ct=g"/>
+  <img src="https://media3.giphy.com/media/Os3jDTrENMMtwZKFrM/giphy.gif?cid=790b761194c4be4335846344b571cad92a014e1ab6c7936d&rid=giphy.gif&ct=g"/>
 </p>
 
 <br/>
@@ -62,7 +62,7 @@ Woodcutter is a easy to play hard to master type of game.
 
   * I used DOTween for all animations.
 
-  ![Progress System](https://media2.giphy.com/media/9Q00KuOUBycHySTCEr/giphy.gif?cid=790b76114b908675f731e6d7da8f5cbd1e636e73687c8f42&rid=giphy.gif&ct=g)
+  ![Animations](https://media2.giphy.com/media/9Q00KuOUBycHySTCEr/giphy.gif?cid=790b76114b908675f731e6d7da8f5cbd1e636e73687c8f42&rid=giphy.gif&ct=g)
 
   <br/>
 
