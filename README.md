@@ -7,14 +7,14 @@
 <br/>
 
 <p align="center">
-    <a href="https://github.com/akbulutoguzhan/simple-snake/commits/main">
-    <img src="https://img.shields.io/github/last-commit/akbulutoguzhan/simple-snake?style=flat-square&logo=github&logoColor=white"
+    <a href="https://github.com/akbulutoguzhan/woodcutter/commits/main">
+    <img src="https://img.shields.io/github/last-commit/akbulutoguzhan/woodcutter?style=flat-square&logo=github&logoColor=white"
          alt="GitHub last commit">
-    <a href="https://github.com/akbulutoguzhan/simple-snake/issues">
-    <img src="https://img.shields.io/github/issues-raw/akbulutoguzhan/simple-snake?style=flat-square&logo=github&logoColor=white"
+    <a href="https://github.com/akbulutoguzhan/woodcutter/issues">
+    <img src="https://img.shields.io/github/issues-raw/akbulutoguzhan/woodcutter?style=flat-square&logo=github&logoColor=white"
          alt="GitHub issues">
-    <a href="https://github.com/akbulutoguzhan/simple-snake/pulls">
-    <img src="https://img.shields.io/github/issues-pr-raw/akbulutoguzhan/simple-snake?style=flat-square&logo=github&logoColor=white"
+    <a href="https://github.com/akbulutoguzhan/woodcutter/pulls">
+    <img src="https://img.shields.io/github/issues-pr-raw/akbulutoguzhan/woodcutter?style=flat-square&logo=github&logoColor=white"
          alt="GitHub pull requests">
 </p>
 <p align="center">
