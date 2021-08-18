@@ -1,0 +1,1 @@
+Visual resources for README.
