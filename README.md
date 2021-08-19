@@ -123,4 +123,4 @@ Reach out to me at one of the following places:
 
 <br/>
 
-**You can play the game on [Unity Play](https://play.unity.com/mg/other/webgl-builds-87512).**
+**You can play the game on [Unity Play](https://play.unity.com/mg/other/webgl-builds-89122).**
