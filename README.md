@@ -107,8 +107,9 @@ There is two way to install this project to your computer.
   1. Open Unity Hub
   2. Click new
   3. Create a 2D project
-  4. Import the Unity package
-     * Double click on woodcutter.unitypackage **OR** *Assets --> Import Package --> Custom Package --> Choose woodcutter.unitypackage*
+  4. Import the Unity package *(choose one)*
+     * Double click on woodcutter.unitypackage
+     * Assets --> Import Package --> Custom Package --> Choose woodcutter.unitypackage
 
 ## Controls
 
